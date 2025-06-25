@@ -14,6 +14,8 @@ CREATE TABLE tasks
   created_on DATETIME NOT NULL DEFAULT GETDATE(),
   created_by VARCHAR(70) NOT NULL,
   last_updated_by VARCHAR(70),
-  last_updated_on DATETIME
+  last_updated_on DATETIME,
+  deleted_on DATETIME,
+  deleted_by VARCHAR(70)
 )
 GO
