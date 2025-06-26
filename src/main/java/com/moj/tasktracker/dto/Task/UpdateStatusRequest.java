@@ -1,6 +1,6 @@
 package com.moj.tasktracker.dto.Task;
 
-import com.moj.tasktracker.api.model.Task;
+import com.moj.tasktracker.api.model.Task.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class UpdateStatusRequest {
 
-  private Task.Status status;
+  private Status status;
 }

@@ -35,15 +35,13 @@ public class TaskController {
   @Operation(summary = "Create Task", description = "create a task to track")
   @PostMapping
   public ResponseEntity<TaskResponse> create(@RequestBody @Validated TaskRequest request) {
-    TaskResponse response = taskService.create(request);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(taskService.create(request));
   }
 
   @Operation(summary = "Retrieve Task", description = "retrieve a task by ID")
   @GetMapping("/{id}")
   public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id) {
-    TaskResponse response = taskService.retrieveById(id);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(taskService.retrieveById(id));
   }
 
   @Operation(summary = "Retrieve Tasks", description = "retrieve a paginated list of tasks")
@@ -66,7 +64,7 @@ public class TaskController {
   public ResponseEntity<String> updateStatus(@PathVariable Long id,
       @RequestBody UpdateStatusRequest request) {
     taskService.updateStatus(id, String.valueOf(request.getStatus()));
-    return ResponseEntity.ok("Status updated successfully");
+    return ResponseEntity.ok("Status updated successfully to: " + request.getStatus());
   }
 
   @Operation(summary = "Delete Task", description = "delete an existing task")
