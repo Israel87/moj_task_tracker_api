@@ -35,9 +35,8 @@ public interface TaskRepository extends Repository<Task, Integer> {
       Pageable pageable
   );
 
-
   @Modifying
-  @Query("UPDATE Task t SET t.status = :status WHERE t.id = :id")
+  @Query("UPDATE Task t SET t.status = :status, t.lastUpdatedOn = CURRENT_TIMESTAMP, t.lastUpdatedBy = 'System' WHERE t.id = :id")
   void updateTaskStatus(@Param("id") Long id, @Param("status") String status);
 
   @Modifying

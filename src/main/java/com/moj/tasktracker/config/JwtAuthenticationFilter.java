@@ -1,7 +1,7 @@
 package com.moj.tasktracker.config;
 
-import com.moj.tasktracker.service.JwtService;
 import com.moj.tasktracker.service.UserService;
+import com.moj.tasktracker.service.impl.JwtServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  private final JwtService jwtService;
+  private final JwtServiceImpl jwtService;
   private final UserService userService;
 
   @Override

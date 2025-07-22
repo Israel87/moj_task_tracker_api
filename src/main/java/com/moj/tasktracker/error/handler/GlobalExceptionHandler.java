@@ -1,6 +1,7 @@
 package com.moj.tasktracker.error.handler;
 
 import com.moj.tasktracker.error.exception.EmailAlreadyExistsException;
+import com.moj.tasktracker.error.exception.InvalidCredentialsException;
 import com.moj.tasktracker.error.exception.NotFoundException;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +37,15 @@ public class GlobalExceptionHandler {
   @ResponseStatus(value = HttpStatus.CONFLICT)
   @ExceptionHandler(EmailAlreadyExistsException.class)
   public Map<String, String> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
+    Map<String, String> errorResponse = new HashMap<>();
+    errorResponse.put("error", ex.getCode());
+    errorResponse.put("message", ex.getMessage());
+    return errorResponse;
+  }
+
+  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public Map<String, String> handleInvalidCredentialsException(InvalidCredentialsException ex) {
     Map<String, String> errorResponse = new HashMap<>();
     errorResponse.put("error", ex.getCode());
     errorResponse.put("message", ex.getMessage());

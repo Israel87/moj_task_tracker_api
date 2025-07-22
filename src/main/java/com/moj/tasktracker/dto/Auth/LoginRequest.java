@@ -9,7 +9,7 @@ public class LoginRequest {
 
   @ValidEmail
   private String email;
-  
+
   @NotNull(message = "password is required")
   private String password;
 }

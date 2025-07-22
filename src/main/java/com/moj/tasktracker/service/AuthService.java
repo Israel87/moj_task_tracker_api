@@ -7,12 +7,14 @@ import com.moj.tasktracker.dto.Auth.LoginRequest;
 import com.moj.tasktracker.dto.Auth.RefreshTokenRequest;
 import com.moj.tasktracker.dto.Auth.SignUpRequest;
 import com.moj.tasktracker.error.exception.EmailAlreadyExistsException;
+import com.moj.tasktracker.error.exception.InvalidCredentialsException;
 import com.moj.tasktracker.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,6 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
 
   private final AuthenticationManager authenticationManager;
-
 
   private final JwtService jwtService;
 
@@ -49,12 +50,20 @@ public class AuthService {
   }
 
   public AuthResponse login(LoginRequest loginRequest) {
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-            loginRequest.getPassword()));
+    try {
+      authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(
+              loginRequest.getEmail(),
+              loginRequest.getPassword()
+          )
+      );
+    } catch (BadCredentialsException ex) {
+      throw new InvalidCredentialsException("Invalid email or password");
+    }
 
     var user = repository.findByEmail(loginRequest.getEmail())
-        .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+        .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+
     var jwt = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
 
@@ -62,8 +71,8 @@ public class AuthService {
     authResponse.setToken(jwt);
     authResponse.setRefreshToken(refreshToken);
     return authResponse;
-
   }
+
 
   public AuthResponse refreshToken(RefreshTokenRequest request) {
     String userEmail = jwtService.extractUserName(request.getToken());
@@ -75,7 +84,7 @@ public class AuthService {
       authResponse.setRefreshToken(request.getToken());
       return authResponse;
     }
-    
+
     return null;
   }
 }
